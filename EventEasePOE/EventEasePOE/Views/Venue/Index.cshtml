@@ -1,0 +1,69 @@
+﻿@model IEnumerable<EventEasePOE.Models.Venue>
+
+@{
+    ViewBag.Title = "Venues";
+}
+
+<h2>Venues</h2>
+
+<!-- SUCCESS / ERROR MESSAGES -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["DeleteError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["DeleteError"]
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Create New Venue", "Create", null, new { @class = "btn btn-success" })
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().VenueName)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Location)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Capacity)</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.VenueName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Capacity)</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="Venue Image" class="img-thumbnail" style="max-height: 80px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">No image</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.VenueId }, new { @class = "btn btn-sm btn-warning" }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.VenueId }, new { @class = "btn btn-sm btn-info" }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.VenueId }, new { @class = "btn btn-sm btn-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No venues found.</p>
+}

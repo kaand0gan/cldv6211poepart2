@@ -1,0 +1,74 @@
+﻿@model IEnumerable<EventEasePOE.Models.Booking>
+
+@{
+    ViewBag.Title = "Bookings";
+}
+
+<h2>Bookings</h2>
+
+<!-- SUCCESS / ERROR MESSAGES -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["DeleteError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["DeleteError"]
+    </div>
+}
+
+<!-- SEARCH BAR -->
+@using (Html.BeginForm("Index", "Booking", FormMethod.Get))
+{
+    <div class="form-inline mb-3">
+        <label for="searchTerm">Search by Booking ID or Event Name:</label>
+        @Html.TextBox("searchTerm", ViewBag.CurrentFilter as string, new
+        {
+            @class = "form-control mx-2",
+            @placeholder = "Enter Booking ID or Event Name",
+            style = "max-width:300px;"
+        })
+        <input type="submit" value="Search" class="btn btn-primary" />
+        @Html.ActionLink("Clear", "Index", null, new { @class = "btn btn-secondary ml-2" })
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Create New Booking", "Create", null, new { @class = "btn btn-success" })
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Event.EventName)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Venue.VenueName)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().BookingDate)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Event.EventName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Venue.VenueName)</td>
+                    <td>@(item.BookingDate.HasValue ? item.BookingDate.Value.ToString("yyyy-MM-dd") : "")</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.BookingId }, new { @class = "btn btn-sm btn-warning" }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.BookingId }, new { @class = "btn btn-sm btn-info" }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.BookingId }, new { @class = "btn btn-sm btn-danger" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No bookings found.</p>
+}
